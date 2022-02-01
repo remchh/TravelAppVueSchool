@@ -39,6 +39,27 @@ const routes = [
     name: "NotFound",
     component: () => import("../views/NotFound.vue"),
   },
+  {
+    path: "/protected",
+    name: "protected",
+    component: () => import("../views/Protected.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("../views/Login.vue"),
+  },
+  {
+    path: "/invoices",
+    name: "invoices",
+    component: () => import("../views/Invoices.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = createRouter({
@@ -52,6 +73,11 @@ const router = createRouter({
       })
     );
   },
+});
+router.beforeEach((to) => {
+  if (to.meta.requiresAuth && !window.user) {
+    return { name: "login", query: { redirect: to.fullPath } };
+  }
 });
 
 export default router;
